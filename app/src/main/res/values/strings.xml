@@ -42,4 +42,41 @@
     <string name="rssi_dbm">%1$d dBm</string>
     <string name="ssid_label">SSID</string>
     <string name="scanning">Scanning…</string>
+
+    <!-- Temporary Wi-Fi debug (Issue #22) -->
+    <string name="debug_open_wifi">Open Wifi Debug</string>
+    <string name="debug_title">Wifi Scanner Debug</string>
+    <string name="debug_temporary_note">Temporary verification screen. Remove after Issue #22 testing.</string>
+    <string name="debug_permission_status">Permission: %1$s</string>
+    <string name="debug_permission_not_requested">Not requested</string>
+    <string name="debug_permission_granted">Granted</string>
+    <string name="debug_permission_denied">Denied</string>
+    <string name="debug_permission_permanently_denied">Permanently denied</string>
+    <string name="debug_target_ssid">Target SSID (optional)</string>
+    <string name="debug_target_bssid">Target BSSID (optional)</string>
+    <string name="debug_start_scanning">Start Scanning</string>
+    <string name="debug_stop_scanning">Stop Scanning</string>
+    <string name="debug_scan_state">Scan state: %1$s</string>
+    <string name="debug_scan_state_idle">Idle</string>
+    <string name="debug_scan_state_scanning">Scanning</string>
+    <string name="debug_scan_state_success">Success</string>
+    <string name="debug_scan_state_error">Error: %1$s</string>
+    <string name="debug_scan_error_no_permission">NoPermission</string>
+    <string name="debug_scan_error_location_disabled">LocationDisabled</string>
+    <string name="debug_scan_error_wifi_disabled">WifiDisabled</string>
+    <string name="debug_scan_error_throttled">Throttled</string>
+    <string name="debug_scan_error_no_matching_network">NoMatchingNetwork</string>
+    <string name="debug_scan_error_not_in_foreground">NotInForeground</string>
+    <string name="debug_scan_error_unknown">Unknown</string>
+    <string name="debug_rssi">RSSI: %1$s</string>
+    <string name="debug_average_rssi">Average RSSI: %1$s</string>
+    <string name="debug_ssid">SSID: %1$s</string>
+    <string name="debug_bssid">BSSID: %1$s</string>
+    <string name="debug_timestamp">Timestamp: %1$s</string>
+    <string name="debug_is_fresh">isFresh: %1$s</string>
+    <string name="debug_next_scan_allowed">nextScanAllowedAtMillis: %1$s</string>
+    <string name="debug_is_scan_ready">isScanReady: %1$s</string>
+    <string name="debug_value_none">—</string>
+    <string name="debug_boolean_true">true</string>
+    <string name="debug_boolean_false">false</string>
 </resources>

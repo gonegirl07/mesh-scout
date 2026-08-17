@@ -25,6 +25,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -33,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.meshscout.app.ui.debug.WifiDebugScreen
 import com.meshscout.app.ui.permissions.PermissionRationaleScreen
 import com.meshscout.app.ui.permissions.PermissionSettingsDialog
 import com.meshscout.app.ui.permissions.PermissionStatus
@@ -57,6 +61,7 @@ private fun MeshScoutApp(
 ) {
     val activity = LocalContext.current as Activity
     val permissionState by permissionViewModel.uiState.collectAsState()
+    var showWifiDebug by rememberSaveable { mutableStateOf(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -101,6 +106,12 @@ private fun MeshScoutApp(
                     continueEnabled = !permissionState.isRequestInProgress,
                     showDeniedNote = permissionState.status == PermissionStatus.Denied
                 )
+            } else if (showWifiDebug) {
+                WifiDebugScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    permissionStatus = permissionState.status,
+                    onBack = { showWifiDebug = false }
+                )
             } else {
                 HomeScreen(
                     modifier = Modifier.fillMaxSize(),
@@ -110,7 +121,8 @@ private fun MeshScoutApp(
                     onOpenSettings = {
                         permissionViewModel.dismissSettingsDialog()
                         openAppSettings(activity)
-                    }
+                    },
+                    onOpenWifiDebug = { showWifiDebug = true }
                 )
             }
 
@@ -141,7 +153,8 @@ private fun HomeScreen(
     permissionStatus: PermissionStatus = PermissionStatus.Granted,
     permissionActionEnabled: Boolean = true,
     onRequestPermission: () -> Unit = {},
-    onOpenSettings: () -> Unit = {}
+    onOpenSettings: () -> Unit = {},
+    onOpenWifiDebug: () -> Unit = {}
 ) {
     Column(
         modifier = modifier.padding(24.dp),
@@ -190,6 +203,13 @@ private fun HomeScreen(
                     Text(text = stringResource(R.string.permission_open_settings))
                 }
             }
+        }
+
+        Button(
+            onClick = onOpenWifiDebug,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(R.string.debug_open_wifi))
         }
     }
 }
