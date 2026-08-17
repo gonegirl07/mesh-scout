@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -203,7 +204,7 @@ class AndroidWifiScanner internal constructor(
     }
 
     private suspend fun runScanLoop() {
-        while (isActive) {
+        while (currentCoroutineContext().isActive) {
             val waitMillis = synchronized(lock) {
                 if (!isSessionActive || !isContinuous || isClosed) {
                     return@synchronized null

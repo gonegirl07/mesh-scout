@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
 private fun MeshScoutApp(
     permissionViewModel: PermissionViewModel = viewModel()
 ) {
-    val activity = LocalContext.current as Activity
+    val activity = LocalContext.current as ComponentActivity
     val permissionState by permissionViewModel.uiState.collectAsState()
     var showWifiDebug by rememberSaveable { mutableStateOf(false) }
 
