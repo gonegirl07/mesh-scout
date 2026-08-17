@@ -1,3 +1,3 @@
 package com.meshscout.app.data.wifi
 
-// WifiScanner, ScanResultMapper, ThrottleHelper will live here
+// Foreground-only Wi-Fi scanning, result mapping, and scan throttling.
