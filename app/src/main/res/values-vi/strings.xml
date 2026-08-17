@@ -27,6 +27,10 @@
     <string name="permission_denied">Đã từ chối quyền. Không thể quét Wi‑Fi.</string>
 
     <string name="home_title">Tìm vị trí đặt Mesh Node tốt nhất</string>
+    <string name="home_permission_required_message">Cấp quyền Wi‑Fi để đo cường độ tín hiệu và bắt đầu sử dụng MeshScout.</string>
+    <string name="home_permission_denied_message">Quyền Wi‑Fi vẫn đang tắt. Hãy cấp quyền để đo cường độ tín hiệu.</string>
+    <string name="home_permission_settings_message">Quyền Wi‑Fi đã bị chặn. Hãy bật quyền trong phần Cài đặt ứng dụng để đo cường độ tín hiệu.</string>
+    <string name="home_grant_permission">Cấp quyền</string>
     <string name="start_measurement">Bắt đầu đo</string>
     <string name="manage_points">Quản lý điểm đo</string>
 

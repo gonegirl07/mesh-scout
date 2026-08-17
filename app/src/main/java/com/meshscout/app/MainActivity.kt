@@ -10,16 +10,21 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -51,12 +56,17 @@ private fun MeshScoutApp(
     permissionViewModel: PermissionViewModel = viewModel()
 ) {
     val activity = LocalContext.current as Activity
-    val permissionState = permissionViewModel.uiState
+    val permissionState by permissionViewModel.uiState.collectAsState()
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { result ->
         permissionViewModel.onPermissionResult(activity, result)
+    }
+
+    val requestPermission = {
+        permissionViewModel.onPermissionRequestStarted()
+        permissionLauncher.launch(permissionViewModel.requiredPermissions())
     }
 
     // Re-check after returning from App settings so the screen changes immediately if access
@@ -86,16 +96,22 @@ private fun MeshScoutApp(
         ) {
             if (permissionState.showRationale) {
                 PermissionRationaleScreen(
-                    onContinue = {
-                        permissionViewModel.onPermissionRequestStarted()
-                        permissionLauncher.launch(permissionViewModel.requiredPermissions())
-                    },
+                    onContinue = requestPermission,
                     onNotNow = permissionViewModel::continueWithoutPermission,
                     continueEnabled = !permissionState.isRequestInProgress,
                     showDeniedNote = permissionState.status == PermissionStatus.Denied
                 )
             } else {
-                HomeScreen(modifier = Modifier.fillMaxSize())
+                HomeScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    permissionStatus = permissionState.status,
+                    permissionActionEnabled = !permissionState.isRequestInProgress,
+                    onRequestPermission = requestPermission,
+                    onOpenSettings = {
+                        permissionViewModel.dismissSettingsDialog()
+                        openAppSettings(activity)
+                    }
+                )
             }
 
             if (permissionState.showSettingsDialog) {
@@ -120,14 +136,61 @@ private fun openAppSettings(activity: Activity) {
 }
 
 @Composable
-private fun HomeScreen(modifier: Modifier = Modifier) {
+private fun HomeScreen(
+    modifier: Modifier = Modifier,
+    permissionStatus: PermissionStatus = PermissionStatus.Granted,
+    permissionActionEnabled: Boolean = true,
+    onRequestPermission: () -> Unit = {},
+    onOpenSettings: () -> Unit = {}
+) {
     Column(
-        modifier = modifier.padding(24.dp)
+        modifier = modifier.padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
             text = stringResource(R.string.home_title),
             style = MaterialTheme.typography.headlineSmall
         )
+
+        when (permissionStatus) {
+            PermissionStatus.Granted -> Unit
+
+            PermissionStatus.NotRequested,
+            PermissionStatus.Denied -> {
+                Text(
+                    text = stringResource(
+                        if (permissionStatus == PermissionStatus.Denied) {
+                            R.string.home_permission_denied_message
+                        } else {
+                            R.string.home_permission_required_message
+                        }
+                    ),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Button(
+                    onClick = onRequestPermission,
+                    enabled = permissionActionEnabled,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = stringResource(R.string.home_grant_permission))
+                }
+            }
+
+            PermissionStatus.PermanentlyDenied -> {
+                Text(
+                    text = stringResource(R.string.home_permission_settings_message),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Button(
+                    onClick = onOpenSettings,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = stringResource(R.string.permission_open_settings))
+                }
+            }
+        }
     }
 }
 

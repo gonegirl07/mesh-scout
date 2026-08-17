@@ -6,12 +6,13 @@ import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /** The states that matter to the permission flow shown to the user. */
 enum class PermissionStatus {
@@ -42,9 +43,8 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
         Context.MODE_PRIVATE
     )
 
-    private var _uiState by mutableStateOf(PermissionUiState())
-    val uiState: PermissionUiState
-        get() = _uiState
+    private val _uiState = MutableStateFlow(PermissionUiState())
+    val uiState: StateFlow<PermissionUiState> = _uiState.asStateFlow()
 
     /**
      * Returns the permission group needed for Wi-Fi scan results on this Android version.
@@ -76,7 +76,9 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
         preferences.edit()
             .putStringSet(KEY_REQUESTED_PERMISSIONS, requestedPermissions)
             .apply()
-        _uiState = _uiState.copy(isRequestInProgress = true)
+        _uiState.update { state ->
+            state.copy(isRequestInProgress = true)
+        }
     }
 
     fun onPermissionResult(activity: Activity, result: Map<String, Boolean>) {
@@ -89,40 +91,44 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun continueWithoutPermission() {
-        _uiState = _uiState.copy(
-            showRationale = false,
-            showSettingsDialog = false,
-            isRequestInProgress = false
-        )
+        _uiState.update { state ->
+            state.copy(
+                showRationale = false,
+                showSettingsDialog = false,
+                isRequestInProgress = false
+            )
+        }
     }
 
     fun dismissSettingsDialog() {
-        _uiState = _uiState.copy(showSettingsDialog = false)
+        _uiState.update { state ->
+            state.copy(showSettingsDialog = false)
+        }
     }
 
     private fun updateState(activity: Activity, forceSettingsDialog: Boolean) {
-        val previousState = _uiState
         val status = determineStatus(activity)
-        val becamePermanentlyDenied =
-            status == PermissionStatus.PermanentlyDenied &&
-                previousState.status != PermissionStatus.PermanentlyDenied
-
-        _uiState = previousState.copy(
-            status = status,
-            showRationale = if (status == PermissionStatus.Granted) {
-                false
-            } else {
-                previousState.showRationale
-            },
-            showSettingsDialog = when {
-                status == PermissionStatus.Granted -> false
+        _uiState.update { previousState ->
+            val becamePermanentlyDenied =
                 status == PermissionStatus.PermanentlyDenied &&
-                    (forceSettingsDialog || becamePermanentlyDenied) -> true
-                status != PermissionStatus.PermanentlyDenied -> false
-                else -> previousState.showSettingsDialog
-            },
-            isRequestInProgress = false
-        )
+                    previousState.status != PermissionStatus.PermanentlyDenied
+
+            previousState.copy(
+                status = status,
+                // "Not now" only dismisses the current rationale screen. A later refresh must
+                // make the rationale available again while permission is still requestable.
+                showRationale = status == PermissionStatus.NotRequested ||
+                    status == PermissionStatus.Denied,
+                showSettingsDialog = when {
+                    status == PermissionStatus.Granted -> false
+                    status == PermissionStatus.PermanentlyDenied &&
+                        (forceSettingsDialog || becamePermanentlyDenied) -> true
+                    status != PermissionStatus.PermanentlyDenied -> false
+                    else -> previousState.showSettingsDialog
+                },
+                isRequestInProgress = false
+            )
+        }
     }
 
     private fun determineStatus(activity: Activity): PermissionStatus {

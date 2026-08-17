@@ -30,6 +30,10 @@
 
     <!-- Home / Main -->
     <string name="home_title">Find best Mesh Node position</string>
+    <string name="home_permission_required_message">Grant Wi‑Fi access to measure signal strength and start using MeshScout.</string>
+    <string name="home_permission_denied_message">Wi‑Fi access is still off. Grant permission to measure signal strength.</string>
+    <string name="home_permission_settings_message">Wi‑Fi access is blocked. Turn it on in App settings to measure signal strength.</string>
+    <string name="home_grant_permission">Grant permission</string>
     <string name="start_measurement">Start measurement</string>
     <string name="manage_points">Manage points</string>
 
