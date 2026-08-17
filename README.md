@@ -11,6 +11,9 @@ MeshScout is a guided signal measurement tool (inspired by WiFi Analyzer) that h
 
 **Languages:** English + Tiếng Việt
 
+**Repo:** https://github.com/gonegirl07/mesh-scout  
+**PRD:** [PRD.md](./PRD.md)
+
 ---
 
 ## How to open the project
@@ -25,8 +28,7 @@ MeshScout is a guided signal measurement tool (inspired by WiFi Analyzer) that h
 
 3. Select **File → Open** and choose the root folder of the project.
 
-4. Wait for Gradle sync to finish (first time may take a few minutes).  
-   Android Studio will automatically download the Gradle wrapper if needed.
+4. Wait for Gradle sync to finish (first time may take a few minutes).
 
 5. Connect a **real Android device** (API 26+) — emulator is **not reliable** for WiFi RSSI measurement.
 
@@ -36,63 +38,93 @@ MeshScout is a guided signal measurement tool (inspired by WiFi Analyzer) that h
 
 ## Tech Stack
 
-- **Language:** Kotlin
+- **Language:** Kotlin 2.1
 - **UI:** Jetpack Compose + Material 3
-- **Architecture:** MVVM
+- **Architecture:** MVVM + clean-ish packages
 - **Min SDK:** 26 (Android 8.0)
 - **Target SDK:** 35
-- **Local storage:** DataStore (Room later if needed)
+- **Local storage:** DataStore (Room can be added later)
 - **Package:** `com.meshscout.app`
+- **License:** Apache 2.0
 
 ---
 
-## Project Structure (high level)
+## Project Structure
 
 ```
 app/src/main/java/com/meshscout/app/
 ├── MeshScoutApplication.kt
 ├── MainActivity.kt
+├── data/
+│   ├── wifi/          # WifiScanner, throttling, scan mapping
+│   ├── local/         # DataStore / Room
+│   └── repository/
+├── domain/
+│   ├── model/         # Session, UsagePoint, CandidatePosition, Score
+│   └── usecase/
 ├── ui/
 │   ├── theme/
 │   ├── navigation/
-│   ├── components/
-│   └── screens/
-├── data/
-│   ├── wifi/
-│   ├── local/
-│   └── repository/
-├── domain/
+│   ├── permissions/   # Rationale + request flow
+│   ├── session/       # List / create / detail
+│   ├── measure/       # Mark Controller, Mark Points, Live Find mode
+│   └── components/    # ScoreGauge, RssiBadge…
 └── util/
 ```
 
 ---
 
+## Current Status (2026-08-17)
+
+### Done
+- [x] Repository + Apache 2.0 license
+- [x] Detailed bilingual PRD
+- [x] Modern Gradle + Compose project skeleton
+- [x] Correct Wi-Fi / Location permissions (with `maxSdkVersion` + `NEARBY_WIFI_DEVICES`)
+- [x] Placeholder vector launcher icon
+- [x] Full package structure according to PRD
+- [x] High-priority GitHub Issues created
+
+### Next (start coding here)
+See open issues: https://github.com/gonegirl07/mesh-scout/issues
+
+Recommended order:
+1. Permission rationale & request flow
+2. WifiScanner wrapper (after quick permission research on real device)
+3. Domain models + local persistence
+4. Scoring engine
+5. Mark Controller → Mark Usage Points → Live Find screen
+
+---
+
 ## Roadmap
 
-### Phase 1 – Foundation (Current)
-- [x] Create GitHub repository
-- [x] Basic project structure + permissions
-- [ ] Permission handling + WiFi Scanner
-- [ ] Real-time RSSI display
+### Phase 1 – Foundation ✅
+- [x] Repo, PRD, skeleton, permissions, structure, issues
 
 ### Phase 2 – Core Features (MVP)
-- [ ] Create / manage measurement points
-- [ ] Save measurement sessions
-- [ ] "Find Node Position" mode with simple scoring
-- [ ] Full English + Vietnamese UI
-
-### Phase 3 – Usability & Polish
-- [ ] Better guidance while walking
+- [ ] Permission handling + WiFi Scanner
+- [ ] Session model + persistence
+- [ ] Scoring engine
+- [ ] Mark Controller / Usage Points / Live Find screens
 - [ ] Session history
-- [ ] Improve scoring algorithm
-- [ ] Dark mode polish
+
+### Phase 3 – Polish
+- [ ] Better guidance & throttling UX
+- [ ] Improved scoring
+- [ ] More complete bilingual strings
+- [ ] Dark theme polish
 
 ---
 
-## License
+## Contributing
 
-Apache License 2.0
+Early stage. The best way to help right now is:
+1. Test permission / scanning behavior on different Android versions & manufacturers
+2. Comment on open issues with findings
+3. Improve Vietnamese / English wording
 
 ---
 
-**Status:** Project skeleton ready. Start coding features.
+**MeshScout – Measure. Walk. Place. Better Wi-Fi for everyone.**  
+**Đo. Đi. Đặt. Wi-Fi tốt hơn cho mọi người.**
