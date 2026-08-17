@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MeshScout</string>
+
+    <string name="ok">Đồng ý</string>
+    <string name="cancel">Hủy</string>
+    <string name="next">Tiếp theo</string>
+    <string name="back">Quay lại</string>
+    <string name="save">Lưu</string>
+    <string name="delete">Xóa</string>
+
+    <string name="permission_location_title">Cần quyền vị trí</string>
+    <string name="permission_location_message">MeshScout cần quyền vị trí để đo cường độ sóng WiFi. Chúng tôi không thu thập hay lưu vị trí của bạn.</string>
+    <string name="permission_denied">Đã từ chối quyền. Không thể quét WiFi.</string>
+
+    <string name="home_title">Tìm vị trí đặt Mesh Node tốt nhất</string>
+    <string name="start_measurement">Bắt đầu đo</string>
+    <string name="manage_points">Quản lý điểm đo</string>
+
+    <string name="current_signal">Tín hiệu hiện tại</string>
+    <string name="rssi_dbm">%1$d dBm</string>
+    <string name="ssid_label">SSID</string>
+    <string name="scanning">Đang quét…</string>
+</resources>

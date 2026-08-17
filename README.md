@@ -1,95 +1,98 @@
 # MeshScout
 
-**Guided Wi-Fi signal measurement & mesh node placement finder for Android**
+**Android app to help ordinary users find the best positions for WiFi Mesh nodes in their home.**
 
-MeshScout helps ordinary users (non-experts) find the best positions to place Wi-Fi Mesh nodes inside a home or small office.
+MeshScout is a guided signal measurement tool (inspired by WiFi Analyzer) that helps you place mesh nodes optimally — even if you are not a networking expert.
 
-Unlike classic Wi-Fi Analyzer apps that only list networks and signal strength, MeshScout walks you through a clear process:
+- Measure signal strength from the main Mesh Controller / Router
+- Mark important usage points (bedroom, living room, office...)
+- Walk around and discover positions that have good backhaul signal **and** can cover your usage points well
+- Simple scoring system to suggest good placement spots
 
-1. Create a measurement session  
-2. Mark the current Mesh Controller / Router location  
-3. Mark important usage points (bedroom, living room, desk…)  
-4. Enter **“Find Node Position”** mode — walk around while the app shows live RSSI from the Controller + a simple placement score  
-5. Save history for later comparison  
-
-**Languages:** English + Tiếng Việt (more languages welcome later)
+**Languages:** English + Tiếng Việt
 
 ---
 
-## Current Status
+## How to open the project
 
-- [x] GitHub repository created  
-- [x] **Product Requirements Document (PRD) completed** → see [`PRD.md`](./PRD.md)  
-- [x] Android Wi-Fi scanning limitations researched (Android 10 → 15/16)  
-- [ ] Project scaffolding (Kotlin + Jetpack Compose)  
-- [ ] Core MVP features  
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/gonegirl07/mesh-scout.git
+   cd mesh-scout
+   ```
 
-**Tech stack (confirmed):** Kotlin · Jetpack Compose · Material 3 · Room · Coroutines/Flow  
-**Package name:** `com.meshscout.app`  
-**Min SDK:** 26 · **Target SDK:** 35/36  
+2. Open **Android Studio** (latest stable recommended).
 
----
+3. Select **File → Open** and choose the root folder of the project.
 
-## Quick Links
+4. Wait for Gradle sync to finish (first time may take a few minutes).  
+   Android Studio will automatically download the Gradle wrapper if needed.
 
-| Document | Description |
-|----------|-------------|
-| [PRD.md](./PRD.md) | Full Product Requirements Document (bilingual EN/VI) – goals, personas, user stories, functional requirements, scoring formula, technical constraints, recommended issues |
-| [Issue #1](https://github.com/gonegirl07/mesh-scout/issues/1) | Research & implement reliable WiFi scanning |
+5. Connect a **real Android device** (API 26+) — emulator is **not reliable** for WiFi RSSI measurement.
+
+6. Run the `app` configuration.
 
 ---
 
-## Goals (MVP)
+## Tech Stack
 
-- Help non-experts systematically measure and decide mesh node placement  
-- Show live RSSI of the controller + simple placement score while walking  
-- Privacy-first: no location data leaves the device, no accounts required  
-- Full bilingual UI (English + Vietnamese)  
-- Clean, documented, contribution-friendly open-source codebase  
+- **Language:** Kotlin
+- **UI:** Jetpack Compose + Material 3
+- **Architecture:** MVVM
+- **Min SDK:** 26 (Android 8.0)
+- **Target SDK:** 35
+- **Local storage:** DataStore (Room later if needed)
+- **Package:** `com.meshscout.app`
 
 ---
 
-## High-level Roadmap
+## Project Structure (high level)
 
-### Phase 1 – Foundation (Now)
-- [x] Repository + PRD  
-- [ ] Android project scaffolding  
-- [ ] Permission handling (FINE_LOCATION / NEARBY_WIFI_DEVICES)  
-- [ ] Basic WifiScanner with throttling awareness  
+```
+app/src/main/java/com/meshscout/app/
+├── MeshScoutApplication.kt
+├── MainActivity.kt
+├── ui/
+│   ├── theme/
+│   ├── navigation/
+│   ├── components/
+│   └── screens/
+├── data/
+│   ├── wifi/
+│   ├── local/
+│   └── repository/
+├── domain/
+└── util/
+```
+
+---
+
+## Roadmap
+
+### Phase 1 – Foundation (Current)
+- [x] Create GitHub repository
+- [x] Basic project structure + permissions
+- [ ] Permission handling + WiFi Scanner
+- [ ] Real-time RSSI display
 
 ### Phase 2 – Core Features (MVP)
-- [ ] Session + Usage points + Candidate positions (Room)  
-- [ ] Mark Controller / Mark Usage Points screens  
-- [ ] Live “Find Node Position” mode + scoring engine  
-- [ ] Session history  
+- [ ] Create / manage measurement points
+- [ ] Save measurement sessions
+- [ ] "Find Node Position" mode with simple scoring
+- [ ] Full English + Vietnamese UI
 
-### Phase 3 – Polish
-- [ ] Better guidance & visual feedback  
-- [ ] Export / language switcher  
-- [ ] Dark theme + accessibility  
-
-### Phase 4 – Community-driven
-- [ ] Floor-plan / heatmap experiments  
-- [ ] More languages  
-- [ ] Advanced scoring models  
-
----
-
-## Contributing
-
-This project is in early stage. The PRD is the source of truth for scope.
-
-Once scaffolding is done, contributions (code, translations, testing on real devices, ideas) are very welcome.
-
-Please open an issue or discussion before large changes.
+### Phase 3 – Usability & Polish
+- [ ] Better guidance while walking
+- [ ] Session history
+- [ ] Improve scoring algorithm
+- [ ] Dark mode polish
 
 ---
 
 ## License
 
-To be decided (likely MIT or Apache 2.0)
+Apache License 2.0
 
 ---
 
-**MeshScout – Measure. Walk. Place. Better Wi-Fi for everyone.**  
-**Đo. Đi. Đặt. Wi-Fi tốt hơn cho mọi người.**
+**Status:** Project skeleton ready. Start coding features.
